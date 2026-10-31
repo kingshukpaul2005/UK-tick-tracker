@@ -65,9 +65,53 @@
             <p>Species guide, prevention tips and seasonal chart coming next.</p>
         </section>
 
-        <section id="report-section" class="tab-panel" hidden>
-            <h2>Report a sighting</h2>
-            <p>The report form is coming next.</p>
+        <section id="report-section" class="tab-panel" hidden aria-labelledby="report-heading">
+            <h2 id="report-heading">Report a sighting</h2>
+            <p>Seen a tick? Tell us where and when. Fields marked * are required.</p>
+
+            <div id="form-summary" role="alert" tabindex="-1"></div>
+
+            <form id="report-form" class="report-form" novalidate>
+                <div class="form-field">
+                    <label for="r-city">City *</label>
+                    <select id="r-city" name="city" required aria-describedby="r-city-error">
+                        <option value="">Choose a city</option>
+                    </select>
+                    <p class="field-error" id="r-city-error"></p>
+                </div>
+
+                <div class="form-field">
+                    <label for="r-date">Date seen *</label>
+                    <input type="date" id="r-date" name="date" required aria-describedby="r-date-warning r-date-error">
+                    <p class="field-warning" id="r-date-warning"></p>
+                    <p class="field-error" id="r-date-error"></p>
+                </div>
+
+                <div class="form-field">
+                    <label for="r-time">Time seen (optional)</label>
+                    <input type="time" id="r-time" name="time" aria-describedby="r-time-hint r-time-error">
+                    <p class="hint" id="r-time-hint">If you leave this blank, the sighting is recorded at 00:00.</p>
+                    <p class="field-error" id="r-time-error"></p>
+                </div>
+
+                <div class="form-field">
+                    <label for="r-species">Species *</label>
+                    <select id="r-species" name="species" required aria-describedby="r-species-error">
+                        <option value="">Choose a species</option>
+                    </select>
+                    <p class="field-error" id="r-species-error"></p>
+                </div>
+
+                <div class="form-field">
+                    <label for="r-image">Photo (optional)</label>
+                    <input type="file" id="r-image" name="image" accept="image/jpeg,image/png,image/webp"
+                        aria-describedby="r-image-hint r-image-error">
+                    <p class="hint" id="r-image-hint">JPEG, PNG or WebP, up to 5 MB.</p>
+                    <p class="field-error" id="r-image-error"></p>
+                </div>
+
+                <button type="submit" id="r-submit">Submit report</button>
+            </form>
         </section>
     </main>
 

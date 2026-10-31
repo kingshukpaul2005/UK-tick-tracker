@@ -223,6 +223,7 @@ async function loadSpecies() {
         option.value = name;
         option.textContent = name;
         speciesEl.append(option);
+        fieldEl("species").append(option.cloneNode(true));   // report form dropdown
 
         const key = document.createElement("span");
         key.innerHTML = '<span class="swatch" style="background:' + colourFor(name) + '"></span>' + escapeHtml(name);
@@ -245,6 +246,132 @@ document.querySelectorAll(".tab").forEach(t => {
     t.addEventListener("click", () => switchTab(t.dataset.tab));
 });
 
+// ---------- Report form ----------
+const formEl = document.getElementById("report-form");
+const formSummaryEl = document.getElementById("form-summary");
+const submitBtn = document.getElementById("r-submit");
+const FIELDS = ["city", "date", "time", "species", "image"];
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
+function fieldEl(name) { return document.getElementById("r-" + name); }
+function errorEl(name) { return document.getElementById("r-" + name + "-error"); }
+
+function todayString() {                       // local date, not UTC
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return now.getFullYear() + "-" + month + "-" + day;
+}
+
+function showSummary(message, kind) {          // kind is "error" or "success"
+    formSummaryEl.className = kind;
+    formSummaryEl.textContent = message;
+}
+
+function clearErrors() {
+    FIELDS.forEach(name => {
+        errorEl(name).textContent = "";
+        fieldEl(name).removeAttribute("aria-invalid");
+    });
+    formSummaryEl.className = "";
+    formSummaryEl.textContent = "";
+}
+
+function showErrors(errors) {
+    let first = null;
+    for (const [name, message] of Object.entries(errors)) {
+        if (FIELDS.includes(name)) {
+            errorEl(name).textContent = message;
+            fieldEl(name).setAttribute("aria-invalid", "true");
+            first = first || name;
+        }
+    }
+    showSummary("Your report was not sent. Please fix the highlighted fields.", "error");
+    if (first) fieldEl(first).focus();
+}
+
+// Quick checks in the browser for a friendly experience; the server checks everything again.
+function validateReport() {
+    const errors = {};
+    if (!fieldEl("city").value) errors.city = "Please choose a city.";
+    if (!fieldEl("species").value) errors.species = "Please choose a species.";
+    const date = fieldEl("date").value;
+    if (!date) errors.date = "Please enter the date you saw the tick.";
+    else if (date > todayString()) errors.date = "The date cannot be in the future.";
+    const file = fieldEl("image").files[0];
+    if (file) {
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+            errors.image = "Image must be a JPEG, PNG or WebP file.";
+        } else if (file.size > MAX_IMAGE_BYTES) {
+            errors.image = "Image must be 5 MB or smaller.";
+        }
+    }
+    return errors;
+}
+
+// Warning (does not block sending): date more than a year ago
+fieldEl("date").addEventListener("change", () => {
+    const value = fieldEl("date").value;
+    const limit = new Date();
+    limit.setFullYear(limit.getFullYear() - 1);
+    document.getElementById("r-date-warning").textContent =
+        value && new Date(value) < limit
+            ? "Warning: this date is more than a year ago. Please check it is correct."
+            : "";
+});
+
+async function loadCities() {
+    const cities = await api("/api/cities");
+    const names = cities.map(c => (typeof c === "string" ? c : c.city)).sort();
+    for (const name of names) {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        fieldEl("city").append(option);
+    }
+}
+
+formEl.addEventListener("submit", async event => {
+    event.preventDefault();
+    clearErrors();
+
+    const problems = validateReport();
+    if (Object.keys(problems).length > 0) {
+        showErrors(problems);
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+    try {
+        const response = await fetch(API_BASE + "/api/sightings", {
+            method: "POST",
+            body: new FormData(formEl)         // do not set Content-Type yourself
+        });
+        const body = await response.json().catch(() => ({}));
+
+        if (response.status === 201) {
+            formEl.reset();
+            document.getElementById("r-date-warning").textContent = "";
+            showSummary("Thank you! Your sighting in " + body.location + " has been recorded.", "success");
+            formSummaryEl.focus();
+            await refresh();                   // so the new report appears on the map
+        } else if (body.fieldErrors) {
+            showErrors(body.fieldErrors);
+        } else {
+            showSummary(body.message || "Server error (" + response.status + ")", "error");
+        }
+    } catch (networkError) {
+        showSummary("Cannot reach the server. Is the back end running on " + API_BASE + "?", "error");
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit report";
+    }
+});
+
+// "Report a sighting here" button in the map panel pre-fills the city
+document.addEventListener("report-city", event => { fieldEl("city").value = event.detail; });
+
 // ---------- Wiring and start ----------
 [fromEl, toEl, speciesEl].forEach(el => el.addEventListener("change", refresh));
 document.getElementById("reset-filters").addEventListener("click", () => {
@@ -255,11 +382,17 @@ document.getElementById("reset-filters").addEventListener("click", () => {
 });
 
 async function init() {
+    fieldEl("date").max = todayString();
     try {
         if (speciesEl.options.length <= 1) await loadSpecies();
     } catch (error) {
         setStatus(error.message, { error: true, retry: init });
         return;
+    }
+    try {
+        if (fieldEl("city").options.length <= 1) await loadCities();
+    } catch (error) {
+        showSummary("Could not load the city list: " + error.message, "error");
     }
     await refresh();
 }
