@@ -30,7 +30,7 @@ public class IngestionService {
     private final CityLookupRepository cityRepo;
 
     public IngestionService(ElancoClient client, SeedFileLoader seedLoader, RecordValidator validator,
-                            SightingRepository sightings, CityLookupRepository cityRepo) {
+            SightingRepository sightings, CityLookupRepository cityRepo) {
         this.client = client;
         this.seedLoader = seedLoader;
         this.validator = validator;
@@ -63,6 +63,8 @@ public class IngestionService {
         List<Sighting> toSave = new ArrayList<>();
         int duplicates = 0;
         int rejected = 0;
+        Set<String> seenKeys = new HashSet<>();
+        int suspected = 0;
 
         for (ElancoRecord r : records) {
             Optional<String> problem = validator.validate(r, cities);
@@ -72,9 +74,15 @@ public class IngestionService {
                 continue;
             }
             String id = r.id().trim();
-            if (!knownIds.add(id)) {          // add() returns false if the id was already there
+            if (!knownIds.add(id)) { // add() returns false if the id was already there
                 duplicates++;
                 continue;
+            }
+            String key = validator.parseDate(r.date()).toLocalDate() + "|" + r.location().trim() + "|"
+                    + r.species().trim();
+            if (!seenKeys.add(key)) {
+                suspected++;
+                log.warn("Suspected duplicate (same day, city and species) kept: id={}", id);
             }
             CityLookup city = cities.get(r.location().trim());
             toSave.add(new Sighting(id, validator.parseDate(r.date()), city.getCity(),
@@ -85,7 +93,7 @@ public class IngestionService {
 
         IngestionResult result = new IngestionResult(dataSource, records.size(), toSave.size(),
                 duplicates, rejected, message);
-        log.info("Ingestion finished: {}", result);
+        log.info("Ingestion finished: {} (suspected duplicates: {})", result, suspected);
         return result;
     }
 
