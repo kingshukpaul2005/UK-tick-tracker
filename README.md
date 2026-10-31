@@ -80,6 +80,7 @@ Elanco API  (https://dev-task.elancoapps.com/data/tick-sightings)
 - Species are shown by name as well as colour, so colour is never the only signal.
 
 ## Running the project
+“To view on a phone on the same Wi-Fi, open http://<your-computer's-IP>:5500.”
 
 ### Requirements
 - Java 21 or later (the Maven wrapper is included; no separate Maven install)
