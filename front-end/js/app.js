@@ -1,7 +1,7 @@
 "use strict";
 
 // ---------- Settings ----------
-const API_BASE = "http://localhost:8080";
+const API_BASE = "http://" + window.location.hostname + ":8080";
 const PAGE_SIZE = 500;
 const FALLBACK_COLOUR = "#666666";
 const SPECIES_COLOURS = {
