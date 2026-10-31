@@ -1,0 +1,273 @@
+:root {
+    --green: #1f4d2b;
+    --green-light: #e8f1ea;
+    --border: #c9d3cb;
+    --text: #1c1c1c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: #fafafa;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: #fff;
+    color: var(--green);
+    padding: 8px 12px;
+    z-index: 2000;
+}
+
+.skip-link:focus {
+    left: 0;
+}
+
+:focus-visible {
+    outline: 3px solid #ffbf47;
+    outline-offset: 2px;
+}
+
+.site-header {
+    background: var(--green);
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 16px;
+}
+
+.site-header h1 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.site-header nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.tab.active {
+    background: #fff;
+    color: var(--green);
+    font-weight: 600;
+}
+
+main {
+    padding: 12px 16px 32px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.field input,
+.field select,
+.filters button,
+.panel-actions button,
+.panel-actions a {
+    font: inherit;
+    padding: 8px 10px;
+    border: 1px solid #8a968c;
+    border-radius: 6px;
+    background: #fff;
+}
+
+button {
+    cursor: pointer;
+}
+
+#status {
+    min-height: 1.5em;
+    margin: 6px 0;
+}
+
+#status.error {
+    color: #a30000;
+    font-weight: 600;
+}
+
+.map-layout {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+#map {
+    flex: 1;
+    height: 65vh;
+    min-height: 380px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+#panel {
+    width: 340px;
+    max-height: 65vh;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+}
+
+#panel h3 {
+    margin: 0 0 4px;
+}
+
+#panel h4 {
+    margin: 14px 0 6px;
+}
+
+.muted {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.breakdown,
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.breakdown li,
+.timeline li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+}
+
+.swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid #222;
+    flex: none;
+}
+
+.timeline li {
+    border-bottom: 1px solid #eee;
+    font-size: 0.92rem;
+}
+
+.panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.panel-actions a {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+}
+
+.panel-actions button:hover,
+.panel-actions a:hover {
+    background: var(--green-light);
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 10px 0;
+    font-size: 0.9rem;
+}
+
+.legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.city-list-box {
+    margin-top: 8px;
+}
+
+#city-list {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+#city-list button {
+    padding: 6px 10px;
+    border: 1px solid #8a968c;
+    border-radius: 6px;
+    background: #fff;
+}
+
+@media (max-width: 800px) {
+    .map-layout {
+        flex-direction: column;
+    }
+
+    #panel {
+        width: 100%;
+        max-height: none;
+    }
+
+    #map {
+        height: 50vh;
+    }
+}

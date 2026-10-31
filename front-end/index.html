@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UK Tick Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+        <h1>UK Tick Tracker</h1>
+        <nav aria-label="Main">
+            <button type="button" class="tab active" data-tab="map-section">Map</button>
+            <button type="button" class="tab" data-tab="learn-section">Learn</button>
+            <button type="button" class="tab" data-tab="report-section">Report a sighting</button>
+        </nav>
+    </header>
+
+    <main id="main">
+        <section id="map-section" class="tab-panel" aria-labelledby="map-heading">
+            <h2 id="map-heading" class="visually-hidden">Tick sightings map</h2>
+
+            <form id="filters" class="filters" aria-label="Map filters">
+                <div class="field">
+                    <label for="from">From</label>
+                    <input type="date" id="from" name="from">
+                </div>
+                <div class="field">
+                    <label for="to">To</label>
+                    <input type="date" id="to" name="to">
+                </div>
+                <div class="field">
+                    <label for="species">Species</label>
+                    <select id="species" name="species">
+                        <option value="">All species</option>
+                    </select>
+                </div>
+                <button type="button" id="reset-filters">Reset filters</button>
+            </form>
+
+            <div id="status" role="status" aria-live="polite"></div>
+
+            <div class="map-layout">
+                <div id="map" aria-label="Map of tick sightings across the UK"></div>
+                <aside id="panel" tabindex="-1" aria-label="Sighting details">
+                    <p>Select a bubble on the map to see details for that area.</p>
+                </aside>
+            </div>
+
+            <div id="legend" class="legend" aria-label="Colour key"></div>
+
+            <details class="city-list-box">
+                <summary>Show locations as a list (keyboard friendly)</summary>
+                <ul id="city-list"></ul>
+            </details>
+        </section>
+
+        <section id="learn-section" class="tab-panel" hidden>
+            <h2>Learn</h2>
+            <p>Species guide, prevention tips and seasonal chart coming next.</p>
+        </section>
+
+        <section id="report-section" class="tab-panel" hidden>
+            <h2>Report a sighting</h2>
+            <p>The report form is coming next.</p>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
