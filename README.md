@@ -20,7 +20,7 @@ An MVP web app that shows tick sightings across the UK on an interactive map, le
 Browser (HTML + CSS + JS, Leaflet, Chart.js)
         |  JSON over HTTP / multipart form for reports
         v
-Spring Boot REST API (Java 17)
+Spring Boot REST API (Java 21)
   controllers -> services -> Spring Data JPA repositories -> H2 database (file)
         ^
         |  ingestion service (retry, fallback)
@@ -82,7 +82,7 @@ Elanco API  (https://dev-task.elancoapps.com/data/tick-sightings)
 ## Running the project
 
 ### Requirements
-- Java 17 or later (the Maven wrapper is included; no separate Maven install)
+- Java 21 or later (the Maven wrapper is included; no separate Maven install)
 - Node.js, only if you use the `npx serve` option for the front end
 
 ### 1. Start the back end
