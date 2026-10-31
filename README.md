@@ -20,7 +20,7 @@ An MVP web app that shows tick sightings across the UK on an interactive map, le
 Browser (HTML + CSS + JS, Leaflet, Chart.js)
         |  JSON over HTTP / multipart form for reports
         v
-Spring Boot REST API (Java 17)
+Spring Boot REST API (Java 21)
   controllers -> services -> Spring Data JPA repositories -> H2 database (file)
         ^
         |  ingestion service (retry, fallback)
@@ -48,7 +48,7 @@ Elanco API  (https://dev-task.elancoapps.com/data/tick-sightings)
 
 ## Technical choices and why
 
-- **Java 17 and Spring Boot:** the language I am strongest in. Spring gives REST, validation, CORS and error handling with little code.
+- **Java 21 and Spring Boot:** the language I am strongest in. Spring gives REST, validation, CORS and error handling with little code.
 - **H2 file database:** needs no install, so the project runs from a clean clone. The database file is git-ignored. For production I would move to PostgreSQL; the JPA code would barely change.
 - **Spring Data JPA:** filtering, pagination and indexes with annotations rather than hand-written SQL.
 - **Plain JavaScript:** no build tooling to break, and the whole front end can be read in a few files.
@@ -82,7 +82,7 @@ Elanco API  (https://dev-task.elancoapps.com/data/tick-sightings)
 ## Running the project
 
 ### Requirements
-- Java 17 or later (the Maven wrapper is included; no separate Maven install)
+- Java 21 or later (the Maven wrapper is included; no separate Maven install)
 - Node.js, only if you use the `npx serve` option for the front end
 
 ### 1. Start the back end
