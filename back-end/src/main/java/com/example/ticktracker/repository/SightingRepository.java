@@ -2,6 +2,7 @@ package com.example.ticktracker.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import com.example.ticktracker.model.Sighting;
 import com.example.ticktracker.stats.RegionCount;
 
 public interface SightingRepository extends JpaRepository<Sighting, String> {
+    Optional<Sighting> findFirstBySpecies(String species);
 
     @Query("select s.id from Sighting s")
     List<String> findAllIds();
