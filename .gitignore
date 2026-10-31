@@ -1,0 +1,9 @@
+target/
+*.db
+*.mv.db
+data/
+uploads/
+.idea/
+.vscode/
+.env
+node_modules/
