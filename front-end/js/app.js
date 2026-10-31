@@ -371,7 +371,134 @@ formEl.addEventListener("submit", async event => {
 
 // "Report a sighting here" button in the map panel pre-fills the city
 document.addEventListener("report-city", event => { fieldEl("city").value = event.detail; });
+// ---------- Learn tab: species guide ----------
+const SPECIES_GUIDE = [
+    {
+        name: "Marsh tick", latin: "Ixodes apronophorus",
+        hosts: "Water voles (historically coypu)",
+        habitat: "Wetlands, with records in Kent, the Norfolk Broads and Wicken Fen",
+        humans: "Not reported on the GOV.UK profile"
+    },
+    {
+        name: "Southern rodent tick", latin: "Ixodes acuminatus",
+        hosts: "Small rodents",
+        habitat: "Rodent burrows, mainly in southern England",
+        humans: "Not reported on the GOV.UK profile"
+    },
+    {
+        name: "Passerine tick", latin: "Dermacentor frontalis",
+        hosts: "Passerine birds",
+        habitat: "Ground under bird roosts; older records in England, newer ones in Wales",
+        humans: "Sometimes",
+        note: "Latin name as given in the Elanco data. GOV.UK lists the passerine tick as Ixodes frontalis."
+    },
+    {
+        name: "Tree-hole tick", latin: "Ixodes arboricola",
+        hosts: "Birds that nest in tree holes, such as Great and Blue Tits",
+        habitat: "Mainly older records in England, with a few in Wales and Scotland",
+        humans: "Not reported on the GOV.UK profile"
+    },
+    {
+        name: "Fox/badger tick", latin: "Ixodes canisuga",
+        hosts: "Badgers, foxes and domestic dogs",
+        habitat: "Widely distributed across the UK",
+        humans: "Not reported on the GOV.UK profile"
+    }
+];
 
+function renderSpeciesGuide() {
+    const container = document.getElementById("species-guide");
+    for (const sp of SPECIES_GUIDE) {
+        const card = document.createElement("article");
+        card.className = "guide-card";
+        card.style.borderTopColor = colourFor(sp.name);     // same colour as the map
+        card.innerHTML =
+            "<h4>" + escapeHtml(sp.name) + "</h4>" +
+            '<p class="latin">' + escapeHtml(sp.latin) + "</p>" +
+            "<dl>" +
+            "<dt>Feeds on</dt><dd>" + escapeHtml(sp.hosts) + "</dd>" +
+            "<dt>Where it lives</dt><dd>" + escapeHtml(sp.habitat) + "</dd>" +
+            "<dt>Bites humans?</dt><dd>" + escapeHtml(sp.humans) + "</dd>" +
+            "</dl>" +
+            (sp.note ? '<p class="muted">' + escapeHtml(sp.note) + "</p>" : "");
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "Show on the map";
+        button.setAttribute("aria-label", "Show " + sp.name + " sightings on the map");
+        button.addEventListener("click", () => {
+            speciesEl.value = sp.name;      // sets the map's species filter
+            switchTab("map-section");
+            refresh();
+        });
+        card.append(button);
+        container.append(card);
+    }
+}
+// ---------- Learn tab: seasonal chart ----------
+let seasonalChart = null;
+const chartCityEl = document.getElementById("chart-city");
+const chartSpeciesEl = document.getElementById("chart-species");
+
+async function loadSeasonalControls() {
+    const [cities, species] = await Promise.all([api("/api/cities"), api("/api/species")]);
+    for (const c of cities) {
+        const name = typeof c === "string" ? c : c.city;
+        chartCityEl.append(new Option(name, name));
+    }
+    for (const s of species) {
+        chartSpeciesEl.append(new Option(s, s));
+    }
+}
+
+async function updateSeasonalChart() {
+    const params = new URLSearchParams();
+    if (chartCityEl.value) params.set("city", chartCityEl.value);
+    if (chartSpeciesEl.value) params.set("species", chartSpeciesEl.value);
+
+    const points = await api("/api/stats/seasonal?" + params);
+    const labels = points.map(p => p.period);
+    const counts = points.map(p => p.count);
+    const colour = chartSpeciesEl.value ? colourFor(chartSpeciesEl.value) : "#1f4d2b";
+
+    if (seasonalChart) seasonalChart.destroy();
+    seasonalChart = new Chart(document.getElementById("seasonal-chart"), {
+        type: "bar",
+        data: { labels, datasets: [{ label: "Sightings", data: counts, backgroundColor: colour }] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 }, title: { display: true, text: "Sightings" } },
+                x: { title: { display: true, text: "Month" } }
+            }
+        }
+    });
+
+    // text version of the same data, for screen readers
+    const body = document.querySelector("#seasonal-table tbody");
+    body.innerHTML = "";
+    for (const p of points) {
+        const row = body.insertRow();
+        row.insertCell().textContent = p.period;
+        row.insertCell().textContent = p.count;
+    }
+    const total = counts.reduce((a, b) => a + b, 0);
+    document.getElementById("seasonal-chart").setAttribute("aria-label",
+        "Bar chart of tick sightings by month. " + total + " sightings in total.");
+}
+
+async function initSeasonalChart() {
+    try {
+        await loadSeasonalControls();
+        await updateSeasonalChart();
+    } catch (error) {
+        console.error(error);
+    }
+}
+chartCityEl.addEventListener("change", () => updateSeasonalChart().catch(console.error));
+chartSpeciesEl.addEventListener("change", () => updateSeasonalChart().catch(console.error));
 // ---------- Wiring and start ----------
 [fromEl, toEl, speciesEl].forEach(el => el.addEventListener("change", refresh));
 document.getElementById("reset-filters").addEventListener("click", () => {
@@ -394,7 +521,8 @@ async function init() {
     } catch (error) {
         showSummary("Could not load the city list: " + error.message, "error");
     }
+    if (chartCityEl.options.length <= 1) initSeasonalChart();
     await refresh();
 }
-
+renderSpeciesGuide();
 init();

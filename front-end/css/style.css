@@ -363,3 +363,89 @@ button {
     color: var(--green);
     border: 1px solid var(--green);
 }
+
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin: 12px 0 8px;
+}
+
+.guide-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-top: 6px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.guide-card h4 {
+    margin: 0;
+}
+
+.latin {
+    margin: 2px 0 8px;
+    font-style: italic;
+    color: #555;
+}
+
+.guide-card dt {
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.guide-card dd {
+    margin: 0;
+}
+
+.guide-card button {
+    font: inherit;
+    margin-top: 10px;
+    padding: 8px 10px;
+    border: 1px solid #8a968c;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.guide-card button:hover {
+    background: var(--green-light);
+}
+
+.tips li {
+    margin-bottom: 6px;
+}
+
+#learn-section {
+    max-width: 1000px;
+}
+
+.chart-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.chart-controls select {
+    font: inherit;
+    padding: 6px 8px;
+}
+
+.chart-box {
+    position: relative;
+    height: 300px;
+    max-width: 800px;
+}
+
+#seasonal-table {
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+#seasonal-table th,
+#seasonal-table td {
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    text-align: left;
+}

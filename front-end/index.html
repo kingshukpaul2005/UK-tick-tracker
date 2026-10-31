@@ -60,9 +60,74 @@
             </details>
         </section>
 
-        <section id="learn-section" class="tab-panel" hidden>
-            <h2>Learn</h2>
-            <p>Species guide, prevention tips and seasonal chart coming next.</p>
+        <section id="learn-section" class="tab-panel" hidden aria-labelledby="learn-heading">
+            <h2 id="learn-heading">Learn about ticks</h2>
+            <p class="muted">General information only. If you feel unwell after a tick bite, speak to your GP.</p>
+
+            <h3>Species guide</h3>
+            <p>These are the five tick species in our sighting data. Each card shows what the species typically feeds on
+                and where it is found in the UK.</p>
+            <div id="species-guide" class="guide-grid"></div>
+            <p class="muted">Species details from the
+                <a href="https://gov.uk/guidance/tick-species-profiles" target="_blank" rel="noopener">GOV.UK tick
+                    species profiles</a>.
+            </p>
+            <h3>Seasonal activity</h3>
+            <p>Sightings by month of the year, across all years in the data.</p>
+            <div class="chart-controls">
+                <label for="chart-city">Location</label>
+                <select id="chart-city">
+                    <option value="">All locations</option>
+                </select>
+                <label for="chart-species">Species</label>
+                <select id="chart-species">
+                    <option value="">All species</option>
+                </select>
+            </div>
+            <div class="chart-box">
+                <canvas id="seasonal-chart" role="img" aria-label="Bar chart of tick sightings by month"></canvas>
+            </div>
+            <details>
+                <summary>View chart data as a table</summary>
+                <table id="seasonal-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Month</th>
+                            <th scope="col">Sightings</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </details>
+            <h3>Preventing tick bites</h3>
+            <ul class="tips">
+                <li>Stay on footpaths and avoid long grass.</li>
+                <li>In tick-prone areas, wear long sleeves and trousers tucked into your socks.</li>
+                <li>Choose light-coloured clothing, because ticks are easier to spot on it.</li>
+                <li>Use insect repellent on exposed skin.</li>
+                <li>At the end of the day, check yourself, your children (including the scalp and neck) and your pets
+                    for ticks.</li>
+                <li>Check skin folds such as armpits, groin and waistband.</li>
+            </ul>
+
+            <h3>If you find a tick</h3>
+            <ol class="tips">
+                <li>Grip the tick gently, as close to the skin as possible, using fine-tipped tweezers or a tick removal
+                    tool.</li>
+                <li>Pull steadily away from the skin. Do not twist or squash it.</li>
+                <li>Do not use heat, alcohol, petroleum jelly or other substances to make it let go.</li>
+                <li>Wash the area with soap and water, and apply antiseptic cream around the bite.</li>
+                <li>Watch the area over the following weeks for a rash or other symptoms.</li>
+            </ol>
+            <p><strong>See your GP</strong> if you develop a circular, bull's-eye style rash (it can appear up to three
+                months after a bite)
+                or flu-like symptoms such as tiredness, aches, headache, fever, chills or a stiff neck. Tell them if you
+                have been in
+                woodland or heath, even if you don't remember a bite.</p>
+            <p class="muted">Prevention and removal advice from
+                <a href="https://nidirect.gov.uk/news/protect-yourself-against-tick-bites" target="_blank"
+                    rel="noopener">nidirect</a>.
+            </p>
         </section>
 
         <section id="report-section" class="tab-panel" hidden aria-labelledby="report-heading">
@@ -116,6 +181,7 @@
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 
