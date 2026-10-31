@@ -48,7 +48,7 @@ Elanco API  (https://dev-task.elancoapps.com/data/tick-sightings)
 
 ## Technical choices and why
 
-- **Java 17 and Spring Boot:** the language I am strongest in. Spring gives REST, validation, CORS and error handling with little code.
+- **Java 21 and Spring Boot:** the language I am strongest in. Spring gives REST, validation, CORS and error handling with little code.
 - **H2 file database:** needs no install, so the project runs from a clean clone. The database file is git-ignored. For production I would move to PostgreSQL; the JPA code would barely change.
 - **Spring Data JPA:** filtering, pagination and indexes with annotations rather than hand-written SQL.
 - **Plain JavaScript:** no build tooling to break, and the whole front end can be read in a few files.
