@@ -29,7 +29,7 @@ Elanco API  (https://dev-task.elancoapps.com/data/tick-sightings)
 
 - **Back end** (`back-end/`): Spring Boot 3, Maven. Packages: controllers, services, repositories, entities, `stats`, exception handling.
 - **Front end** (`front-end/`): plain HTML, CSS and JavaScript with no build step.
-- **Design** (`design/`): wireframes. [CHECK: add once drawn]
+- **Design** (`design/`): wireframes. [Design folder](./design/)
 
 ### Database
 - `sighting`: id (primary key), date, location, species, latin_name, region, latitude, longitude, source (`API` or `USER`), image_path, created_at. Indexed on date and location.
