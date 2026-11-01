@@ -2,6 +2,7 @@
 
 **Author:** Kingshuk Paul Peash
 **Submission:** Elanco ITSP Technical Task 2026 (Full Stack option)
+**Walkthrough video:** [Watch the walkthrough (video)](walkthrough.mp4). The video file is in this repository, in the same folder as this README.
 
 An MVP web app that shows tick sightings across the UK on an interactive map, lets people learn how to recognise and avoid ticks, and lets them report new sightings.
 
