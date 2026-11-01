@@ -132,3 +132,6 @@ The tests cover record validation (missing fields, bad date, future date, unknow
 - [nidirect: Protect yourself against tick bites](https://nidirect.gov.uk/news/protect-yourself-against-tick-bites)
 
 The Learn tab is general information, not medical advice.
+
+## Next steps
+Translate this project to Next.js, React, TypeScript and Tailwind CSS.
